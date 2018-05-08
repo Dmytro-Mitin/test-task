@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Конструктор</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="constructor-page">
+<main>
+    <div class="container_12">
+        <div class="grid_12">
+            <div id="constructor" class="constructor-block">
+                    <div class="cb-top-line">
+                            <div class="cb-step currentLabel" :class="{currentLabel: activeMenuItem === 'btn1' }"  data-step="cb-item1" id="cb-step1">
+                                <p>
+                                    <span>1</span>
+                                    Изображение
+                                </p>
+                            </div>
+                            <div class="cb-step" :class="{currentLabel: activeMenuItem === 'btn2' }" data-step="cb-item2" id="cb-step2">
+                                <p>
+                                    <span>2</span>
+                                    Рама
+                                </p>
+                            </div>
+                            <div class="cb-step" :class="{currentLabel: activeMenuItem === 'btn3' }" data-step="cb-item3" id="cb-step3">
+                                <p>
+                                    <span>3</span>
+                                    Заголовок
+                                </p>
+                            </div>
+                            <div class="cb-step" :class="{currentLabel: activeMenuItem === 'btn4' }" data-step="cb-item4" id="cb-step4">
+                                <p>
+                                    <span>4</span>
+                                    Цвет отпечатков
+                                </p>
+                            </div>
+                        </div>
+                <div class="cb-result">
+                    <div class="cb-result__title">
+                        <p>Ваша картина</p>
+                    </div>
+                    <div class="cb-result__content">
+                        <p class="cb-result__data">
+                            <span>Изображение:</span>
+                            <strong></strong>
+                            <strong>{{ flagPicture ? activePicture.titlePict : 'Не выбрано' }}</strong>
+                        </p>
+                        <p class="cb-result__data">
+                            <span>Рама:</span>
+                            <strong></strong>
+                            <strong>{{ flagBorder ? activeBorder.title : 'Не выбрано' }}</strong>
+                        </p>
+                        <div class="cb-result__data cb-result__marks">
+                                <span>Отпечатки: </span>
+                                <strong></strong>
+                                <strong><span v-if="checkedMarks.length == 0" >Не выбраны</span><div class="cube_marks" v-for="cMarks in checkedMarks" v-bind:style="{background: cMarks}" ></div></strong>
+                                </div>
+                                
+                        <div class="cb-result__object">
+                            <div class="cb-result__img" v-model="activePicture.src" >
+                                <img src="{{activePicture.src}}" alt="{{activePicture.alt}}">
+                            </div>
+                            <div class="cb-result__border" v-model="activeBorder.src" >
+                                    <img src="{{activeBorder.src}}" alt="{{activeBorder.alt}}">
+                            </div>
+                            <p class="cb-result__text__title {{activeFont}}">{{titlePicture}}</p>
+                            <p class="cb-result__text__name {{activeFont}}">{{signaturePicture}}</p>
+                            <p class="cb-result__text__date {{activeFont}}">{{dateEvent}}</p>
+                        </div>
+                    </div>
+                    <div class="cb-result__bottom">
+                        <form action="" method="POST">
+                            <p class="cb-next {{activeNextStep}}" @click="nextStep()">{{buttonNext}}</span></p>
+                            <input name="result" id="" type="text" hidden="">
+                        </form>
+                    </div>
+                </div>
+                <div class="cb-wrapper">
+                  <div id="cb-items" v-bind:class="activeClass">
+                      <!-- Picture section -->
+                        <div class="cb-item">
+                            <p class="cb-item__title">
+                                Выберите изображение
+                            </p>
+                            <p class="cb-item__text">
+                                для начала выберите основу, саму картину, на которую вы и гости вашего праздника будете
+                                наносить отпечатки пальцев с пожеланиями
+                            </p>
+                            <div class="cb-item-pics">
+
+                                <div class="cb-item-pic"  v-for="item in pictures">
+                                    <img @click="setActivePicture($index)" :src="item.src"  alt="{{item.alt}}" title="{{item.titlePict}}" v-model="tmpPriceStep1" width="176" height="220" > 
+                                </div>
+                                
+                            </div>
+                        </div>
+                      <!-- end Picture section -->
+                        
+                      <!-- Border section -->
+                        <div class="cb-item">
+                            <p class="cb-item__title">
+                                Рама
+                            </p>
+                            <p class="cb-item__text">
+                                подберите раму, которая подойдет случаю и впишется в интерьер, ведь вы же не просто
+                                оставляете "пальчики", а создаете предмет декора для дома и офиса:
+                            </p>
+                            <div class="cb-item-borders">
+
+                                <div class="cb-item-border" v-for="borderItem in borders">
+                                    <img @click="setActiveBorder($index)" :src='borderItem.src'  alt="{{borderItem.alt}}" title="{{borderItem.title}}" v-model="tmpPriceStep2"
+                                         width="120" height="150">
+                                    
+                                    <div v-show='borders.active'>
+                                    <a class="cb-item-border__prev fancybox gallery"
+                                                            href="{{borderItem.hrefPre}}" title="{{borderItem.title}}"
+                                                            rel="{{borderItem.rel}}"></a>
+                                    </div>
+                                    </div>
+                           
+                                </div>
+                    </div>
+                    <!-- end Border section -->
+
+                    <!-- Title section  -->
+                        <div class="cb-item">
+                            <p class="cb-item__title">
+                                Заголовок
+                            </p>
+                            <p class="cb-item__text">
+                                персонализируйте ваше "Дерево пожеланий"; вверху и внизу картины есть специальные поля,
+                                которые можно заполнить по вашему усмотрению: вписать имена виновников торжества, или
+                                особые пожелания, добавить дату, или логотип компании, если речь идет о корпоративном
+                                подарке.
+                            </p>
+                            <div class="cb-item__line">
+                                <input id="pic-title" @click="setActiveTitle($index)" placeholder="Наша Свадьба" maxlength="22" type="text" v-model="titlePicture">
+                                <span>Заголовок картины</span>
+                            </div>
+                            <div class="cb-item__line">
+                                <input id="pic-name" @click="setActiveTitle($index)" placeholder="Анастасия и Константин" maxlength="36" type="text" v-model="signaturePicture">
+                                <span>Подпись</span>
+                            </div>
+                            <div class="cb-item__line">
+                                <input id="pic-date" @click="setActiveTitle($index)" placeholder="29 июля 2015" maxlength="26" type="text" v-model="dateEvent">
+                                <span>Дата события</span>
+                            </div>
+                            <div class="cb-item__line--btns">
+                                    <span id="ariston" class="btn-font" type="button" @click="activeBtn = 'ariston'" :class="{ activeClass: activeBtn === 'ariston' }">Ariston</span>
+                                    <span id="davinci" class="btn-font" type="button" @click="activeBtn = 'davinci'" :class="{ activeClass: activeBtn === 'davinci' }">DaVinci</span>
+                                    <span id="brody" class="btn-font" type="button" @click="activeBtn = 'brody'" :class="{ activeClass: activeBtn === 'brody' }">Brody</span>
+                            </div>
+                        </div>
+                        <!-- end Title section  -->
+
+                        <!-- Marks section -->
+                        <div class="cb-item">
+                            <p class="cb-item__title">
+                                Цвет отпечатков
+                            </p>
+                            <p class="cb-item__text">
+                                наконец, подберите самые подходящие цвета красок, с помощью которых вы и оставите на
+                                картине свой след на память!<br>
+                                <strong>Обратите внимание: более 2-х цветов увеличат стоимость</strong>
+                            </p>
+
+                            <div class="cb-item-marks">
+                                <div class="cb-item-mark" v-for="markItem in marks">
+                                    <input @click="setActiveMark($index, $event)" id="{{markItem.id}}" type="checkbox" value="{{markItem.value}}" v-model='checkedMarks'>
+                                    <label for="{{markItem.id}}" title="{{markItem.title}}" ></label>
+                                    <img  :src="markItem.src" alt="{{markItem.title}}"  width="136" height="136">
+                                </div>
+                            </div>
+                        </div>
+                           <!-- end Marks section -->
+                    </div>
+                </div>
+                <div class="cb-bottom-line">
+                    <div class="cb-total">
+                        <span class="cb-total__text">Стоимость:</span><span class="cb-total__amount">{{commonPrice}}</span>
+                        <span class="cb-total__currency"> грн</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>          
+</main>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
